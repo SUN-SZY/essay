@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>❺Hibernate  Web基础 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /><style>.mermaid { background-color: white; width: 640px; }</style></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">❺Hibernate  Web基础</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1636182864000"
+                  >2021-11-06 15:14</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922373563"
+                  >2022-01-23 15:19</time
+                ></span
+              >
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><p><a>相关笔记外链</a></p>
+<h2 id="一-javaee三层结构">一、JavaEE三层结构</h2>
+<ul>
+<li>web层
+<ul>
+<li>Struts框架</li>
+</ul>
+</li>
+<li>service层
+<ul>
+<li>spring框架</li>
+</ul>
+</li>
+<li>dao层
+<ul>
+<li>hibernate框架
+<ul>
+<li>对数据库进行crud操作</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MVC思想
+<ul>
+<li>M ：模型</li>
+<li>V ：视图</li>
+<li>C ：控制思想</li>
+</ul>
+</li>
+</ul>
+<h2 id="二-框架基础">二、框架基础</h2>
+<ul>
+<li>
+<p>框架可以帮助实现一部分功能，减少代码量</p>
+</li>
+<li>
+<p>hibernate魁岸噶几应用在JavaEE三层结构中的dao层</p>
+</li>
+<li>
+<p>在dao层里面对数据库进行crud操作，使用hibernate实现curd操作，hibernate底层代码就是jdbc，hibernate对jdbc进行封装，使用hibernate好处，不需要写复杂的jdbc代码了，也不需要写sql语句</p>
+</li>
+<li>
+<p>hibernate是一个轻量级开源框架</p>
+</li>
+<li>
+<p>hibernate版本</p>
+<ul>
+<li>3.x版本</li>
+<li>4.x版本 过渡版本</li>
+<li>5.x版本
+<ul>
+<li>hibernate-release-5.0.7-final版本
+<ul>
+<li>lib
+<ul>
+<li>hibernate相关代码jar包</li>
+</ul>
+</li>
+<li>document相关文件</li>
+<li>project 源代码</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>orm思想</p>
+<ul>
+<li>hibernate使用ORM思想对数据库进行curd操作</li>
+<li>在web阶段学习javabean，目前称为 实体类</li>
+<li>orm
+<ul>
+<li>object relation mapping 对象关系映射</li>
+<li>让实体类和数据库表进行一一对应关系
+<ul>
+<li>让实体类首先和数据库表对应</li>
+<li>让实体类属性和表里面字段对应</li>
+</ul>
+</li>
+<li>不需要直接操作数据库表，而操作表对应的实体类对象</li>
+</ul>
+</li>
+</ul>
+
+				<div>
+					
+					<pre class="mermaid">graph LR
+    A[JDBC代码]
+    B[实体类]-.-|一一对应|C[表]--&gt;D[实体类对象]
+
+</pre>
+				</div>
+			<div><pre class="hljs"><code>JDBC代码
+<span class="hljs-comment">//加载驱动</span>
+Class.forName(<span class="hljs-string">"com.myssql.jdbc.Driver"</span>):
+<span class="hljs-comment">//创建链接</span>
+Connection conn=DriverManager。getConnection（URL，username，password）
+<span class="hljs-comment">//对数据库进行预编译操作</span>
+PrepareStatment psmt=conn.prepareStatement(sql);
+<span class="hljs-comment">//执行sql查询sql</span>
+ResultSet rs=pstm.executeQuery（）
+<span class="hljs-comment">//遍历结果集</span>
+....
+<span class="hljs-comment">//释放资源</span></code></pre></div>
+<div><pre class="hljs"><code>实体类/javabean
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span>{
+     <span class="hljs-type">int</span> uid;
+     <span class="hljs-keyword">private</span> String username;
+     <span class="hljs-keyword">private</span> String password;
+     <span class="hljs-comment">// set and get 方法</span>
+}
+</code></pre></div>
+<div><pre class="hljs"><code>表
+create table t_user{
+     uid <span class="hljs-type">int</span>
+     username <span class="hljs-title function_">varchar</span><span class="hljs-params">(<span class="hljs-number">100</span>)</span>
+     password <span class="hljs-title function_">varchar</span><span class="hljs-params">(<span class="hljs-number">100</span>)</span>
+}
+</code></pre></div>
+</li>
+<li>
+<p>对应关系</p>
+<ul>
+<li>类和表对应</li>
+<li>类里面的属性和标的字段对应</li>
+<li>不需要操作表，而表对应的实体类对象就可以了</li>
+<li>hibernate封装的对象Session</li>
+</ul>
+</li>
+</ul>
+<div><pre class="hljs"><code><span class="hljs-comment">//创建实体类对象</span>
+<span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+user.setUsername(<span class="hljs-string">"lucky"</span>);
+session.save(user)<span class="hljs-comment">//保存</span></code></pre></div>
+<h2 id="三-基本操作">三、基本操作</h2>
+<ul>
+<li>导入hibernate的jar包
+<ul>
+<li>lib文件夹下的requied必备</li>
+<li>jpa</li>
+<li>日志信息输出 本身无日志jar包
+<ul>
+<li>log4j</li>
+<li>slf4</li>
+</ul>
+</li>
+<li>mysql驱动包</li>
+</ul>
+</li>
+<li>创建实体类
+<ul>
+<li>定义一个唯一值</li>
+<li>生成get and set方法</li>
+<li>hibernate无法自己创建表，反正我自己写的创建不了</li>
+</ul>
+</li>
+<li>配置实体类和数据库表一一对应关系（映射关系）
+<ul>
+<li>创建xml格式的配置文件
+<ul>
+<li>位置无固定要求</li>
+<li>实体类对应直接创建hbm.xml文件</li>
+</ul>
+</li>
+<li>引入约束文件
+<ul>
+<li>dtd约束 约束复制保留第一行</li>
+<li>public旁边的为根标签</li>
+</ul>
+</li>
+<li>配置映射关系
+<ul>
+<li>在根标签下写入class
+<ul>
+<li>class 对应的name 为对应的实体类的全路径</li>
+<li>class 对应的table 为对应的数据表名 可以任意写</li>
+<li>class 对应的id
+<ul>
+<li>id中的name属性 实体类中的那个唯一值id属性</li>
+<li>id中的column属性 对应的列名
+<ul>
+<li>generator 设置主键和自动增长策略 值为native</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>class 中对应的property 属性里面的其他列表名字 一般和上面相同</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>创建hibernate的核心配置文件
+<ul>
+<li>文件格式为xml，位置和名字固定src/hibernate.cfg.xml</li>
+<li>引入约束</li>
+<li>hibernate核心配置文件操作时只会执行这个文件，其他文件需要自己手动导入</li>
+<li>配置
+<ul>
+<li>配置数据库信息
+<ul>
+<li>MySQL驱动</li>
+<li>url地址</li>
+<li>用户名</li>
+<li>密码</li>
+<li>展示数据库代码</li>
+<li>格式化输出 //换行输出，没有经过格式化输出的在一行</li>
+<li>创建表update 帮助创建</li>
+<li>方言 //不同数据库里面有不一样的数据库代码 主要是为了分页操作</li>
+<li>引入其他的映射文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      </article>
+    </div>
+  <script src="/_markdown_plugin_assets/mermaid/mermaid.min.js"></script>
+<script src="/_markdown_plugin_assets/mermaid/mermaid_render.js"></script></body>
+</html>

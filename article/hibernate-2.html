@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>㈠❷Hibernate 一对多级联操作 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">㈠❷Hibernate 一对多级联操作</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1636178900000"
+                  >2021-11-06 14:08</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922627388"
+                  >2022-01-23 15:23</time
+                ></span
+              >
+            </div>
+            
+            <div>
+              Keywords: 
+              <span class="keyword">&gt;&gt; untagged &lt;&lt;</span>
+              
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><p><a>相关笔记外链</a></p>
+<h2 id="一-一对多级联操作">一、一对多级联操作</h2>
+<ul>
+<li>
+<p>Ⅰ.级联保存(复杂写法)</p>
+<ul>
+<li>常规方法创建客户联系人对象</li>
+<li>建立联系
+<ul>
+<li>创建客户联系人对象</li>
+<li>在客户表示联系人，在联系人表示客户
+<ul>
+<li>把联系人对象放到客户对象的set集合里面</li>
+</ul>
+<div><pre class="hljs"><code>customer.getSetLinkMan().add(linkman);</code></pre></div>
+<ul>
+<li>把客户对象放到联系人里面</li>
+</ul>
+<div><pre class="hljs"><code>linkman.setCustomer(customer);</code></pre></div>
+<ul>
+<li>保存数据</li>
+</ul>
+<div><pre class="hljs"><code>session.sqve(customer)
+session.sqve(linkman)</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Ⅰ.级联保存(简单写法)</p>
+<ul>
+<li>在Customer.hbm.xml文件set标签上加入<code>cascade=“save-update”</code></li>
+<li>建立联系
+<ul>
+<li>把联系人放到客户里面</li>
+</ul>
+<div><pre class="hljs"><code>customer.getSetLinkMan().add(linkman);</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>Ⅱ.级联删除</p>
+<ul>
+<li>删除逻辑
+<ul>
+<li>根据id查询客户对象</li>
+<li>调用方法删除</li>
+</ul>
+<div><pre class="hljs"><code><span class="hljs-type">Customer</span> <span class="hljs-variable">customer</span> <span class="hljs-operator">=</span> session.get(Customer.class,<span class="hljs-number">3</span>);
+session.delete(customer);</code></pre></div>
+</li>
+<li>在Customer.hbm.xml文件set标签上加入<code>cascade=“save-update,delete”</code></li>
+<li>删除联系人<div><pre class="hljs"><code><span class="hljs-type">Customer</span> <span class="hljs-variable">customer</span> <span class="hljs-operator">=</span> session.get(Customer.class,<span class="hljs-number">3</span>);
+session.delete(customer);</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>Ⅲ.修改操作</p>
+<ul>
+<li>根据id查询Customer和LInkMan表中的数值</li>
+</ul>
+<div><pre class="hljs"><code><span class="hljs-type">Customer</span> <span class="hljs-variable">baidu</span> <span class="hljs-operator">=</span> session.get(Customer.class,<span class="hljs-number">1</span>);
+<span class="hljs-type">Customer</span> <span class="hljs-variable">lucy</span> <span class="hljs-operator">=</span> session.get(LinkMan.class,<span class="hljs-number">2</span>);
+</code></pre></div>
+<ul>
+<li>设置持久态对象的值
+<ul>
+<li>把联系人放到客户里面</li>
+<li>把客户放到联系人里面</li>
+</ul>
+</li>
+</ul>
+<div><pre class="hljs"><code>baidu.getSetLinkMan().add(lucky);
+lucky.setCustomer(baidu);</code></pre></div>
+<ul>
+<li>invers属性
+<ul>
+<li>会修改两次，原因是双向维护，会修改两次cid（会造成性能的下降）  修复方式</li>
+<li>一对多里面，让一的哪一方放弃维护外键
+<ul>
+<li>在映射维护文件set标签中加入属性<code>inverse=“false”</code>表示不放弃维护<code>true</code>表示放弃维护操作</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      </article>
+    </div>
+  </body>
+</html>

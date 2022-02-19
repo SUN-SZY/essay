@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>Hibernate 配置踩坑记录 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">Hibernate 配置踩坑记录</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1636122966000"
+                  >2021-11-05 22:36</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922422380"
+                  >2022-01-23 15:20</time
+                ></span
+              >
+            </div>
+            
+            <div>
+              Keywords: 
+              <span class="keyword">&gt;&gt; untagged &lt;&lt;</span>
+              
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><p><a>相关笔记外链</a></p>
+<h2 id="一-环境文件jar包">一、环境文件jar包</h2>
+<ul>
+<li>包名配置错误会出现无法导入包文件的问题，最常见的就是引入文件的时候代码片段为红色</li>
+<li>基础包</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>包名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>antlr-2.7.7.jar</td>
+</tr>
+<tr>
+<td>byte-buddy-1.10.7.jar</td>
+</tr>
+<tr>
+<td>classmate-1.5.1.jar</td>
+</tr>
+<tr>
+<td>dom4j-2.1.1.jar</td>
+</tr>
+<tr>
+<td>FastInfoset-1.2.15.jar</td>
+</tr>
+<tr>
+<td>hibernate-commons-annotations-5.1.0.Final.jar</td>
+</tr>
+<tr>
+<td>hibernate-core-5.4.11.Final.jar</td>
+<td>hibernate版本</td>
+</tr>
+<tr>
+<td>istack-commons-runtime-3.0.7.jar</td>
+</tr>
+<tr>
+<td>jandex-2.1.1.Final.jar</td>
+</tr>
+<tr>
+<td>javassist-3.24.0-GA.jar</td>
+</tr>
+<tr>
+<td>javax.activation-api-1.2.0.jar</td>
+</tr>
+<tr>
+<td>javax.persistence-api-2.2.jar</td>
+</tr>
+<tr>
+<td>jaxb-api-2.3.1.jar</td>
+</tr>
+<tr>
+<td>jaxb-runtime-2.3.1.jar</td>
+</tr>
+<tr>
+<td>jboss-logging-3.3.2.Final.jar</td>
+</tr>
+<tr>
+<td>jboss-transaction-api_1.2_spec-1.1.1.Final.jar</td>
+</tr>
+<tr>
+<td>stax-ex-1.8.jar</td>
+</tr>
+<tr>
+<td>txw2-2.3.1.jar</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>数据库连接包
+<ul>
+<li>需要连接包对应相应数据库系统版本，即数据库版本，连接包版本需要一致，另外hibernate有版本要求，本次连接采用的最新版的hibernate5.10版本，对应的数据库版本为8.0，连接包为8.0</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>包名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mysql-connector-java-8.0.25.jar</td>
+<td>数据库连接包</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>新版本运行成功所需jar包</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>包名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2">antlr-2.7.7.jar</td>
+</tr>
+<tr>
+<td colspan="2">byte-buddy-1.10.7.jar</td>
+</tr>
+<tr>
+<td colspan="2">classmate-1.5.1.jar</td>
+</tr>
+<tr>
+<td colspan="2">dom4j-2.1.1.jar</td>
+</tr>
+<tr>
+<td colspan="2">FastInfoset-1.2.15.jar</td>
+</tr>
+<tr>
+<td colspan="2">geronimo-jta_1.1_spec-1.1.1.jar</td>
+</tr>
+<tr>
+<td colspan="2">hibernate-commons-annotations-5.1.0.Final.jar</td>
+</tr>
+<tr>
+<td colspan="2">hibernate-core-5.4.11.Final.jar</td>
+</tr>
+<tr>
+<td colspan="2">hibernate-jpa-2.1-api-1.0.0.Final.jar</td>
+</tr>
+<tr>
+<td colspan="2">istack-commons-runtime-3.0.7.jar</td>
+</tr>
+<tr>
+<td colspan="2">jandex-2.1.1.Final.jar</td>
+</tr>
+<tr>
+<td colspan="2">javassist-3.24.0-GA.jar</td>
+</tr>
+<tr>
+<td colspan="2">javax.activation-api-1.2.0.jar</td>
+</tr>
+<tr>
+<td colspan="2">javax.persistence-api-2.2.jar</td>
+</tr>
+<tr>
+<td colspan="2">jaxb-api-2.3.1.jar</td>
+</tr>
+<tr>
+<td colspan="2">jaxb-runtime-2.3.1.jar</td>
+</tr>
+<tr>
+<td colspan="2">jboss-logging-3.3.2.Final.jar</td>
+</tr>
+<tr>
+<td colspan="2">jboss-transaction-api_1.2_spec-1.1.1.Final.jar</td>
+</tr>
+<tr>
+<td colspan="2">log4j-1.2.16.jar</td>
+</tr>
+<tr>
+<td colspan="2">mysql-connector-java-8.0.25.jar</td>
+</tr>
+<tr>
+<td colspan="2">slf4j-api-1.6.1.jar</td>
+</tr>
+<tr>
+<td colspan="2">slf4j-log4j12-1.7.2.jar</td>
+</tr>
+<tr>
+<td colspan="2">stax-ex-1.8.jar</td>
+</tr>
+<tr>
+<td colspan="2">txw2-2.3.1.jar</td>
+</tr>
+</tbody>
+</table>
+<h2 id="二-cfgxml文件配置">二、*.cfg.xml文件配置</h2>
+<ul>
+<li>常见错误问题是无法连接数据库和对数据库的操作
+<ul>
+<li>原因是URL的问题，新版本的支持格式为jdbc:mysql://连接名/库名。其他格式会出现各种原因的报错问题</li>
+<li>原因是编码的问题，需要对数据库进行设置成为utf-8的文件格式</li>
+<li>原因是账户密码的问题，也会报错无法连接</li>
+<li>原因是方言的问题，新版本的需要使用MySQL5Dialect格式</li>
+<li>原因是路径的问题，mapping路径下一定要导入对应的*.hbm.xml文件位置</li>
+</ul>
+</li>
+<li>正确的*.cfg.xml配置
+<ul>
+<li>IDEA版本为2021.2.3</li>
+<li>JAVA8</li>
+<li>Tomcat 9</li>
+<li>mysql 8.0.25</li>
+</ul>
+<div><pre class="hljs"><code>&lt;?xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"GBK"</span>?&gt;
+&lt;!-- 指定Hibernate配置文件的DTD信息 --&gt;
+&lt;!DOCTYPE hibernate-configuration PUBLIC
+        <span class="hljs-string">"-//Hibernate/Hibernate Configuration DTD 3.0//EN"</span>
+        <span class="hljs-string">"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd"</span>&gt;
+&lt;!-- hibernate- configuration是连接配置文件的根元素 --&gt;
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;
+        &lt;!-- 指定连接数据库所用的驱动 --&gt;
+        &lt;property name=<span class="hljs-string">"connection.driver_class"</span>&gt;com.mysql.jdbc.Driver&lt;/property&gt;
+        &lt;!-- 指定连接数据库的url，hibernate连接的数据库名 --&gt;
+        &lt;property name=<span class="hljs-string">"connection.url"</span>&gt;jdbc:mysql:<span class="hljs-comment">//localhost/hibernate&lt;/property&gt;</span>
+        &lt;!-- 指定连接数据库的编码 --&gt;
+        &lt;property name=<span class="hljs-string">"connection.characterEncoding"</span>&gt;utf8&lt;/property&gt;
+        &lt;!-- 指定连接数据库的用户名 --&gt;
+        &lt;property name=<span class="hljs-string">"connection.username"</span>&gt;root&lt;/property&gt;
+        &lt;!-- 指定连接数据库的密码 --&gt;
+        &lt;property name=<span class="hljs-string">"connection.password"</span>&gt;root&lt;/property&gt;
+        &lt;!-- 指定连接池里最大连接数 --&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.c3p0.max_size"</span>&gt;<span class="hljs-number">20</span>&lt;/property&gt;
+        &lt;!-- 指定连接池里最小连接数 --&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.c3p0.min_size"</span>&gt;<span class="hljs-number">1</span>&lt;/property&gt;
+        &lt;!-- 指定连接池里连接的超时时长 --&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.c3p0.timeout"</span>&gt;<span class="hljs-number">5000</span>&lt;/property&gt;
+        &lt;!-- 指定连接池里最大缓存多少个Statement对象 --&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.c3p0.max_statements"</span>&gt;<span class="hljs-number">100</span>&lt;/property&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.c3p0.idle_test_period"</span>&gt;<span class="hljs-number">3000</span>&lt;/property&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.c3p0.acquire_increment"</span>&gt;<span class="hljs-number">2</span>&lt;/property&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.c3p0.validate"</span>&gt;<span class="hljs-literal">true</span>&lt;/property&gt;
+        &lt;!-- 指定数据库方言 --&gt;
+        &lt;!--&lt;property name=<span class="hljs-string">"dialect"</span>&gt;org.hibernate.dialect.MySQLInnoDBDialect&lt;/property&gt;--&gt;
+        &lt;property name=<span class="hljs-string">"dialect"</span>&gt;org.hibernate.dialect.MySQL5Dialect&lt;/property&gt;
+
+        &lt;!-- 根据需要自动创建数据表 --&gt;
+        &lt;property name=<span class="hljs-string">"hbm2ddl.auto"</span>&gt;update&lt;/property&gt;
+        &lt;!-- 显示Hibernate持久化操作所生成的SQL --&gt;
+        &lt;property name=<span class="hljs-string">"show_sql"</span>&gt;<span class="hljs-literal">true</span>&lt;/property&gt;
+        &lt;!-- 将SQL脚本进行格式化后再输出 --&gt;
+        &lt;property name=<span class="hljs-string">"hibernate.format_sql"</span>&gt;<span class="hljs-literal">true</span>&lt;/property&gt;
+        &lt;!-- 罗列所有的映射文件 --&gt;
+
+&lt;!--        &lt;mapping resource=<span class="hljs-string">"hsl/domain/ews.hbm.xml"</span>/&gt;--&gt;
+        &lt;mapping resource=<span class="hljs-string">"com/work/entity/User.hbm.xml"</span>/&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;
+</code></pre></div>
+</li>
+</ul>
+<h2 id="三-hbmxml文件配置">三、*.hbm.xml文件配置</h2>
+<ul>
+<li>class问题
+<ul>
+<li>需要自己手动创建*.cfg.xml文件对应的数据库格式，标红的原因是因为，hibernate没有链接上数据库，所以并不能输出对应的对象。</li>
+<li>table 对应的为表的名字，需要自己手动创建，自带的创建功能好像不太健全。</li>
+<li>id 类似于数据库中的主键，需要单独定义，其name值最好与主键对应，否则会导致插入的情况</li>
+<li>property 对应name值为数据库中的列表名字，无需进行手动更改，每次启动会进行检查，没有的会创建，有的会自己添加</li>
+</ul>
+</li>
+<li>能够运行的代码<div><pre class="hljs"><code><span class="hljs-meta">&lt;?xml version="1.0" encoding="gb2312"?&gt;</span>
+<span class="hljs-comment">&lt;!-- 指定Hiberante3映射文件的DTD信息 --&gt;</span>
+<span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">hibernate-mapping</span> <span class="hljs-keyword">PUBLIC</span>
+        <span class="hljs-string">"-//Hibernate/Hibernate Mapping DTD 3.0//EN"</span>
+        <span class="hljs-string">"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- hibernate-mapping是映射文件的根元素 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">hibernate-mapping</span> <span class="hljs-attr">package</span>=<span class="hljs-string">"com.work.entity"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- 每个class元素对应一个持久化对象 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">class</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"User"</span> <span class="hljs-attr">table</span>=<span class="hljs-string">"user_table"</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- id元素定义持久化类的标识属性 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"uid"</span>&gt;</span>
+            <span class="hljs-comment">&lt;!-- 指定主键生成策略 --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">generator</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"identity"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- property元素定义常规属性 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"address"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">class</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">hibernate-mapping</span>&gt;</span>
+</code></pre></div>
+</li>
+</ul>
+<h2 id="四-关于demo的运行">四、关于Demo的运行</h2>
+<ul>
+<li>一般代码不错就不会报错，最新版的和旧版的都支持代码的更改。其实两种方式都可以使用。</li>
+<li>编写的逻辑为
+<ul>
+<li>实例化Configuration</li>
+<li>使用默认或者新版的方法加载hibernate.cfg.xml文件</li>
+<li>运行实例创建SessionFactory对象</li>
+<li>创建Session会话</li>
+<li>开始运行事务</li>
+<li>创建消息实例</li>
+<li>设置内容</li>
+<li>保存实例</li>
+<li>关闭事务</li>
+<li>关闭会话</li>
+</ul>
+</li>
+<li>Demo运行实例<div><pre class="hljs"><code><span class="hljs-keyword">package</span> com.work.test;
+
+<span class="hljs-keyword">import</span> com.work.entity.User;
+<span class="hljs-keyword">import</span> org.hibernate.Session;
+<span class="hljs-keyword">import</span> org.hibernate.SessionFactory;
+<span class="hljs-keyword">import</span> org.hibernate.Transaction;
+<span class="hljs-keyword">import</span> org.hibernate.cfg.Configuration;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> {
+    <span class="hljs-meta">@SuppressWarnings("deprecation")</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception {
+        <span class="hljs-comment">// 实例化Configuration，</span>
+        <span class="hljs-type">Configuration</span> <span class="hljs-variable">conf</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Configuration</span>()
+                <span class="hljs-comment">// 下面方法默认加载hibernate.cfg.xml文件</span>
+                .configure();
+        <span class="hljs-comment">// 以Configuration创建SessionFactory</span>
+        <span class="hljs-type">SessionFactory</span> <span class="hljs-variable">sf</span> <span class="hljs-operator">=</span> conf.buildSessionFactory();
+        <span class="hljs-comment">// 创建Session</span>
+        <span class="hljs-type">Session</span> <span class="hljs-variable">sess</span> <span class="hljs-operator">=</span> sf.openSession();
+        <span class="hljs-comment">// 开始事务</span>
+        <span class="hljs-type">Transaction</span> <span class="hljs-variable">tx</span> <span class="hljs-operator">=</span> sess.beginTransaction();
+        <span class="hljs-comment">// 创建消息实例</span>
+        <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+        <span class="hljs-comment">// 设置消息标题和消息内容</span>
+        user.setUsername(<span class="hljs-string">"孙占阳"</span>);
+        user.setPassword(<span class="hljs-string">"123456"</span>);
+        user.setAddress(<span class="hljs-string">"宇宙中心"</span>);
+        <span class="hljs-comment">// 保存消息</span>
+        sess.save(user);
+<span class="hljs-comment">//        sess.update(user);</span>
+        <span class="hljs-comment">// 提交事务</span>
+        tx.commit();
+        <span class="hljs-comment">// 关闭Session</span>
+        sess.close();
+        sf.close();
+    }
+}
+</code></pre></div>
+</li>
+</ul>
+<h2 id="五-关于数据库的操作问题">五、关于数据库的操作问题</h2>
+<ul>
+<li>数据库创建的时候需要对应的表的名字，新版的可以进行自动的生成hibernate对应的数据库，但是我的无法创建，只能手动进行创建</li>
+<li>数据创建表之后需要在主键上面设定自动增长策略，勾选自动增长，否则无法正确插入，导致空指针的传入后台会报错</li>
+</ul>
+</div>
+      </article>
+    </div>
+  </body>
+</html>

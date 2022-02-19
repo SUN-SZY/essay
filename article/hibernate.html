@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>㈠❹Hibernate 查询方式 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">㈠❹Hibernate 查询方式</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1637230437000"
+                  >2021-11-18 18:13</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922587442"
+                  >2022-01-23 15:23</time
+                ></span
+              >
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><h2 id="一-对象导航查询">一、对象导航查询</h2>
+<ul>
+<li>根据id查询某个客户，再查询这个客户里面所有的联系人</li>
+<li>目的 查询一个客户的所有联系人
+<ul>
+<li>保留基本的配置</li>
+</ul>
+<div><pre class="hljs"><code> 代码结构
+ <span class="hljs-type">SessionFactory</span> <span class="hljs-variable">SessionFactory</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;
+ <span class="hljs-type">Session</span> <span class="hljs-variable">session</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;
+ <span class="hljs-type">Transaction</span> <span class="hljs-variable">tx</span> <span class="hljs-operator">=</span><span class="hljs-literal">null</span>;
+ Try{
+ 			sessionFactory = HibernateUtils.getSessionFactory();
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+    
+     根据cid=<span class="hljs-number">1</span>客户，在查询这个客户里面所有的联系人
+            <span class="hljs-type">Customer</span> <span class="hljs-variable">customer</span> <span class="hljs-operator">=</span> session.get(Customer.class,<span class="hljs-number">1</span>);
+    <span class="hljs-comment">//再查询这个客户里面所有的联系人</span>
+    <span class="hljs-comment">//直接得到客户里面的set集合</span>
+            Set&lt;LinkMan&gt; linkMan = customer.getSetLinkMan();
+            Syetem.out.print(LinkMan.size());
+            tx.commit();
+    }<span class="hljs-keyword">catch</span>(Exception e){
+                tx.rollback();
+    }<span class="hljs-keyword">finally</span>{
+                session.close();
+                sessionFactory.close();
+    }
+    }
+</code></pre></div>
+</li>
+</ul>
+<h2 id="二-oid查询">二、OID查询</h2>
+<ul>
+<li>根据id查询某一条记录，返回对象</li>
+</ul>
+<div><pre class="hljs"><code> 根据cid=<span class="hljs-number">1</span>客户，在查询这个客户里面所有的联系人
+ <span class="hljs-type">Customer</span> <span class="hljs-variable">customer</span> <span class="hljs-operator">=</span> session.get(Customer.class,<span class="hljs-number">1</span>);
+</code></pre></div>
+<h2 id="三-hql查询">三、hql查询</h2>
+<ul>
+<li>查询所有
+<ul>
+<li>创建Query对象，写hql语句</li>
+</ul>
+<div><pre class="hljs"><code> <span class="hljs-type">Query</span> <span class="hljs-variable">query</span> <span class="hljs-operator">=</span> session.createQuery(<span class="hljs-string">"from Customer"</span>);</code></pre></div>
+<ul>
+<li>调用query对象里面的方法得到结果</li>
+</ul>
+<div><pre class="hljs"><code>List&lt;Customer&gt; list = query.list();
+
+
+ 循环输出
+ <span class="hljs-keyword">for</span> (Customer customer : list){
+    System.out.printlin(customer.getCid()+<span class="hljs-string">"::"</span>+customer.getName());
+
+}</code></pre></div>
+<ul>
+<li>查询查询所有 form实体类的名称</li>
+</ul>
+</li>
+<li>条件查询
+<ul>
+<li>hql条件查询语句写法
+<ul>
+<li>form 实体类名称 where 实体类属性名称=？and =实体类属性名称=？</li>
+<li>form 实体类名称 where 实体类属性名称 like ？</li>
+</ul>
+<div><pre class="hljs"><code><span class="hljs-comment">// 创建query对象 精准查询or模糊查询</span>
+  <span class="hljs-type">Query</span> <span class="hljs-variable">query</span> <span class="hljs-operator">=</span> session.createQuery(<span class="hljs-string">"from Customer c where c.cid=? adn c.custName=?"</span>)
+     		<span class="hljs-string">"from Customer c where c.customer like ?"</span>
+ 设置条件值
+ 向？里面设置值  query.setParameter(<span class="hljs-number">0</span>,<span class="hljs-string">"%浪%"</span>);
+ setParameter方法两个参数
+  第一个参数：<span class="hljs-type">int</span>类型是？位置 ？从<span class="hljs-number">0</span>开始
+ query.setParameter(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>);    
+  第二个参数：具体参数值
+ query.setParameter(<span class="hljs-number">1</span>,<span class="hljs-string">"***"</span>);
+ 调用方法得到结果
+ List&lt;Customer&gt; list = querty.list();
+ 
+ <span class="hljs-keyword">for</span>(CUstomer customer : list){
+        Syetem.out.println(customer.getCid()+<span class="hljs-string">"::"</span>+customer.getCustname())
+
+}
+tx.commit();
+
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>排序查询
+<ul>
+<li>from 实体类名称 order by 属性名称 asc/dsc</li>
+</ul>
+</li>
+<li>分页查询
+<ul>
+<li>MySQL
+<ul>
+<li>使用关键字 limit（只能在MySQL使用）</li>
+<li><code>SELECT * FROM t_user LIMIT 0,3;</code></li>
+</ul>
+</li>
+<li>Hibernate<div><pre class="hljs"><code> 创建query对象
+ 写查询语句
+ <span class="hljs-type">Query</span> <span class="hljs-variable">query</span> <span class="hljs-operator">=</span> session.cerateQuery(<span class="hljs-string">"from Customer"</span>);
+ 设置分页数据
+ 设置开始位置
+ query.setFristResylt(<span class="hljs-number">0</span>);
+ 设置每页记录数
+ query.setMaxResults(<span class="hljs-number">3</span>);
+ 调用方法得到结构
+ List&lt;Customer&gt; list = query.list();</code></pre></div>
+</li>
+</ul>
+</li>
+<li>投影查询
+<ul>
+<li>查的部分字段值
+<ul>
+<li>select 实体类名称1，实体类名称2 FROM 实体类函数名称</li>
+<li>select后面不支持*</li>
+</ul>
+<div><pre class="hljs"><code> 创建query对象
+ <span class="hljs-type">Query</span> <span class="hljs-variable">query</span> <span class="hljs-operator">=</span> session.createQuery(<span class="hljs-string">"select custName from Customer"</span>);
+ 调用方法得到结果
+ List&lt;Object&gt; list = query.list();
+ <span class="hljs-keyword">for</span> (Object object : list){
+        System.out.print(object);
+}</code></pre></div>
+</li>
+</ul>
+</li>
+<li>聚集函数的使用
+<ul>
+<li>count、sum、avg、max、min</li>
+<li>实现方式(其他函数类似)
+<ul>
+<li>生成的数据需要经过转换 long转换为int类型</li>
+</ul>
+<div><pre class="hljs"><code> 创建query对象
+ <span class="hljs-type">Query</span> <span class="hljs-variable">query</span> <span class="hljs-operator">=</span> session.createQuery(<span class="hljs-string">"select count(*) from Customer"</span>);
+ 调用方法得到结果
+ query对象里面有方法，直接返回对象形式
+ <span class="hljs-type">Object</span> <span class="hljs-variable">obj</span> <span class="hljs-operator">=</span> query.uniquerResult();
+ 返回<span class="hljs-type">int</span>类型
+ <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>)obj;
+ 首先把object变成<span class="hljs-type">long</span>类型，再变成<span class="hljs-type">int</span>类型
+ <span class="hljs-type">Long</span> <span class="hljs-variable">lobj</span> <span class="hljs-operator">=</span> (Long)obj;
+ <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> lobj.intValue();
+ System.out.println(count);</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="四-qbc查询">四、QBC查询</h2>
+<ul>
+<li>
+<p>查询所有</p>
+<div><pre class="hljs"><code> 创建对象 
+ <span class="hljs-type">Criteria</span> <span class="hljs-variable">criteria</span> <span class="hljs-operator">=</span> session.createCriteria（Customer.class）<span class="hljs-comment">//(指定所需要修改的列)</span>
+ 调用方法得到结果
+ List&lt;Customer&gt; list = criteria.list();
+</code></pre></div>
+</li>
+<li>
+<p>条件查询(用方法实现查询)</p>
+<div><pre class="hljs"><code> 创建对象
+ <span class="hljs-type">Criteria</span> <span class="hljs-variable">criteria</span> <span class="hljs-operator">=</span> session.createCriteria(Customer.class);
+ 使用criteria对象里面的方法设置条件值
+ 实现使用add方法表示设置条件值
+ 在add方法里面使用类的方法实现提哦啊见设置
+ 类似于cid=？
+ criteria.add(Restrictions.eq(<span class="hljs-string">"cid"</span>,<span class="hljs-number">1</span>));
+ criteria.add(Restrictions.eq(<span class="hljs-string">"custName"</span>,<span class="hljs-string">"百度"</span>));
+ 调用方法得到结果
+ List&lt;Customer&gt; list = criteria.list();
+</code></pre></div>
+<ul>
+<li>其他查询方法</li>
+<li><img src="/_resources/ff5faaf8e13648468b7a699a6ca07b67.jpg" /></li>
+<li>使用方法进行查询(比较少使用)</li>
+<li><code>criteria.add(Restrictions.like("custName","%百%"));</code></li>
+</ul>
+</li>
+<li>
+<p>排序查询（使用方法查询）</p>
+<div><pre class="hljs"><code> 创建对象
+ <span class="hljs-type">Criteria</span> <span class="hljs-variable">criteria</span> <span class="hljs-operator">=</span> session.createCriteria(Customer.class);
+ 设置对那个属性进行排序，设置排序规则
+ criteria.addOrder(Order,asc(<span class="hljs-string">"cid"</span>)); <span class="hljs-comment">//(asc升序、desc降序查询)</span>
+ 调用方法得到结果
+ List&lt;Customer&gt; list = criteria.list();</code></pre></div>
+</li>
+<li>
+<p>分页查询</p>
+<ul>
+<li>开始位置计算公式
+<ul>
+<li>（当前页-1）*每页记录数</li>
+</ul>
+</li>
+</ul>
+<div><pre class="hljs"><code> 创建对象
+ <span class="hljs-type">Criteria</span> <span class="hljs-variable">criteria</span> <span class="hljs-operator">=</span> session.createCriteria(Customer.class);
+ 设置分页数据
+ 设置开始位置
+ criteria.setFritsResult(<span class="hljs-number">0</span>);
+ 每页的记录数
+ criteria.setMaxResults(<span class="hljs-number">3</span>);</code></pre></div>
+</li>
+<li>
+<p>统计查询（*方法查询）</p>
+<div><pre class="hljs"><code>创建对象
+<span class="hljs-type">Criteria</span> <span class="hljs-variable">criteria</span> <span class="hljs-operator">=</span>session.createCriteria(Customer.class);
+     设置操作
+    criteria.setProjection(Projections.rowCount());
+    <span class="hljs-comment">//调用方法得到结果</span>
+     <span class="hljs-type">Object</span> <span class="hljs-variable">obj</span> <span class="hljs-operator">=</span> criteria.uniqueResult();
+     
+     <span class="hljs-type">Long</span> <span class="hljs-variable">lobj</span> <span class="hljs-operator">=</span> (Long) obj;
+     <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> lobj.intValue();</code></pre></div>
+</li>
+<li>
+<p>离线查询（</p>
+<ul>
+<li>以上所有的方法都需要session才能进行。离线查询方式能实现以上所有查询的方式，不需要session创建；</li>
+<li>sevlet调用service，service调用dao
+<ul>
+<li>在dao中对数据库进行crud操作</li>
+<li>在dao中使用hibernate框架，使用hibernate框架的时候调用session里面的方法实现功能</li>
+</ul>
+</li>
+<li></li>
+</ul>
+<div><pre class="hljs"><code> 创建对象
+</code></pre></div>
+</li>
+</ul>
+<h2 id="五-调用本地sql查询">五、调用本地SQL查询</h2>
+</div>
+      </article>
+    </div>
+  </body>
+</html>

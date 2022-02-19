@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>❹Struts 环境配置 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">❹Struts 环境配置</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1632982788000"
+                  >2021-09-30 14:19</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1637157056000"
+                  >2021-11-17 21:50</time
+                ></span
+              >
+            </div>
+            
+            <div>
+              Keywords: 
+              <span class="keyword">&gt;&gt; untagged &lt;&lt;</span>
+              
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><p><a>数据库表与表之间的关系</a>
+<a title="../../../JavaWeb/%E6%A1%86%E6%9E%B6/hibernate/%E2%9D%BBHibernate%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.md" href="../../../JavaWeb/%E6%A1%86%E6%9E%B6/hibernate/%E2%9D%BBHibernate%20%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.md">Hibernate 基础知识</a></p>
+<h2 id="i-上课笔记">Ⅰ. 上课笔记</h2>
+<p><strong>一、值栈特点</strong></p>
+<ul>
+<li>
+<h2 id="符合栈的基本属性">符合栈的基本属性</h2>
+<ul>
+<li>先进后出，后进先出。</li>
+<li>顶部元素称为栈顶，底部元素称为栈底</li>
+</ul>
+</li>
+<li>
+<h2 id="debug调试方式">debug调试方式</h2>
+</li>
+<li>
+<p>Action的对象类只有一个Context属于map集合，里面为Action对象的引用</p>
+</li>
+<li>
+<p>页面中加入&lt;s:debug&gt;&lt;/s:debug&gt;</p>
+</li>
+<li>
+<p>root — 调试出的页面 List、map等集合，栈顶的元素为Action对象的引用，而不是对象</p>
+</li>
+<li>
+<p>Context ---- 存储的Key和value的值</p>
+</li>
+</ul>
+<p><strong>二、值栈的储存</strong></p>
+<ul>
+<li>
+<p>set方法</p>
+</li>
+<li>
+<p>获取ActionContext类对象</p>
+<ul>
+<li>ACtionContext context=ActionContext。getContext（）；
+Values</li>
+</ul>
+</li>
+<li>
+<p>第三种方法</p>
+<ul>
+<li>在Action中生成get方法
+<ul>
+<li>定义变量名称</li>
+<li>生成get方法</li>
+<li>在默认方法中加入定义</li>
+<li>在Struts文件中配置</li>
+</ul>
+</li>
+<li>存放对象
+<ul>
+<li>定义一个对象</li>
+<li>生成对象变量的get方法</li>
+<li>默认方法中进行设置</li>
+<li><code>user.setUsername("")</code>设定对应的值</li>
+</ul>
+</li>
+<li>集合
+<ul>
+<li>定义list集合变量</li>
+<li><code>privat List&lt;User&gt; list = new ArrayList&lt;User&gt;()</code></li>
+<li>返回get方法</li>
+<li>默认方法中设置User的值</li>
+<li>第一组数据
+<code>User user=new User();</code>
+<code>User.setUsername("")</code>
+第二组数据
+<code>User user2=new User（）:</code>
+<code>setUsername("")</code>
+向数组中加入数据
+<code>list.add("user")</code>
+<code>list.add("user2")</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="jsp页面的取值方法">jsp页面的取值方法</h2>
+<ul>
+<li>第一种 获取list值栈中的数据
+<ul>
+<li><code>&lt;s:property value ="list[0].username"&gt;&lt;/s:property&gt;</code></li>
+</ul>
+</li>
+<li>第二种 遍历list得到list里面的每个user对象
+<ul>
+<li><code>&lt;s:iterator value="list"&gt;</code>
+<code>&lt;s:property value="username"&gt;&lt;/s:property&gt;</code></li>
+</ul>
+</li>
+<li>第三种 遍历值栈list集合，得到每个user对象
+<ul>
+<li>执行方式：
+把每次遍历出来的user对象放到context里面获取context里面的数据特点，写ognl表达式使用特殊符号#</li>
+<li><code>&lt;s;property value="#user.username"&gt;&lt;/s:property&gt;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>获取数据方式</p>
+<ul>
+<li>定义对象，默认方法赋值之后如何获取数据
+<ul>
+<li>获取对象里面的数据</li>
+<li><code>&lt;s:property value="user.username"&gt;&lt;/s:property&gt;</code></li>
+</ul>
+</li>
+<li>定义变量，获取变量中的数据
+<ul>
+<li>获取字符串的值</li>
+<li><code>&lt;s: peroperty value="name"&gt;</code></li>
+</ul>
+</li>
+<li>获取strack.set中的数据
+<ul>
+<li>获取值中的数据</li>
+<li><code>&lt;s:property value"username"&gt;&lt;/s:porperty&gt;</code></li>
+</ul>
+</li>
+<li>获取push中的值
+<ul>
+<li>获取push值中的数据</li>
+<li><code>&lt;s:property value="[0].top"&gt;&lt;/s:porperty&gt;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="ii-实验记录">Ⅱ. 实验记录</h2>
+<ul>
+<li>
+<p>值栈的三种输入方式</p>
+</li>
+<li>
+<h2 id="第一种">第一种</h2>
+<div><pre class="hljs"><code> <span class="hljs-comment">//使用值栈对象里面的set方法</span>
+   	  <span class="hljs-comment">//1.获取值栈对象</span>
+        ActionContext 		  
+        context=ActionContext.getContext();
+        ValueStack stack=context.getValueStack();
+        <span class="hljs-comment">//利用set方法向值栈中放数据</span>
+        stack.set(<span class="hljs-string">"username"</span>,<span class="hljs-string">"SUN"</span>);
+        <span class="hljs-comment">//利用push方法向值栈中放数据</span>
+       stack.push(<span class="hljs-string">"abcdefg"</span>); </code></pre></div>
+<ul>
+<li>
+<p>输入方式</p>
+<ul>
+<li>通过set方法向值栈中存入数据</li>
+</ul>
+</li>
+<li>
+<p>输出方式</p>
+<ul>
+<li>字符串类型：<code>&lt;s:property value="username"&gt;&lt;/s:property&gt;</code></li>
+<li>push类型：<code>&lt;s:property value="[0].top"&gt;&lt;/s:property&gt;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="第二种">第二种</h2>
+<div><pre class="hljs"><code><span class="hljs-comment">//定义变量</span>
+<span class="hljs-keyword">private</span>  String name;
+<span class="hljs-comment">//生成get方法</span>
+  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getName</span><span class="hljs-params">()</span> {
+     <span class="hljs-keyword">return</span> name;
+ }
+ <span class="hljs-keyword">public</span> String <span class="hljs-title function_">execute</span><span class="hljs-params">()</span>  {
+      name=<span class="hljs-string">"SUN"</span>;
+     <span class="hljs-keyword">return</span> <span class="hljs-string">"success"</span>;
+
+  } </code></pre></div>
+</li>
+<li>
+<p>输入方式 - 通过定义变量使用get方法存入数据 - 输出方式</p>
+<ul>
+<li>输出栈中字符串：<code>&lt;s:property value="name"&gt;&lt;/s:property&gt;</code></li>
+</ul>
+</li>
+<li>
+<p>第三种</p>
+</li>
+<li></li>
+</ul>
+<div><pre class="hljs"><code><span class="hljs-keyword">private</span> List&lt;User&gt; list=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;User&gt;();
+           <span class="hljs-keyword">public</span> List&lt;User&gt; <span class="hljs-title function_">getList</span><span class="hljs-params">()</span> {
+               <span class="hljs-keyword">return</span> list;
+           }
+         
+           <span class="hljs-keyword">public</span> String <span class="hljs-title function_">execute</span><span class="hljs-params">()</span>  {
+         
+               <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span><span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+               user.setUsername(<span class="hljs-string">"SUN"</span>);
+               user.setPassword(<span class="hljs-string">"113256"</span>);
+               user.setAddress(<span class="hljs-string">"earth"</span>);
+         
+               <span class="hljs-type">User</span> <span class="hljs-variable">user1</span> <span class="hljs-operator">=</span><span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+               user1.setUsername(<span class="hljs-string">"ZHAN"</span>);
+               user1.setPassword(<span class="hljs-string">"123456"</span>);
+               user1.setAddress(<span class="hljs-string">"earth"</span>);
+         
+               <span class="hljs-type">User</span> <span class="hljs-variable">user2</span> <span class="hljs-operator">=</span><span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+               user2.setUsername(<span class="hljs-string">"YANG"</span>);
+               user2.setPassword(<span class="hljs-string">"11236"</span>);
+               user2.setAddress(<span class="hljs-string">"earth"</span>);
+         
+               list.add(user);
+               list.add(user1);
+               list.add(user2);
+         
+               <span class="hljs-keyword">return</span> <span class="hljs-string">"success"</span>;
+         
+           }</code></pre></div>
+<ul>
+<li>
+<p>输入方式</p>
+<ul>
+<li>利用list数组方式方式进行输入</li>
+</ul>
+</li>
+<li>
+<p>输出方式</p>
+<ul>
+<li>陈列输出</li>
+</ul>
+<div><pre class="hljs"><code>  &lt;s:property value=<span class="hljs-string">"list[0].username"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+  &lt;s:property value=<span class="hljs-string">"list[0].password"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+  &lt;s:property value=<span class="hljs-string">"list[0].address"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+     
+  &lt;br&gt;&lt;br&gt;&lt;br&gt;
+     
+  &lt;s:property value=<span class="hljs-string">"list[1].username"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+  &lt;s:property value=<span class="hljs-string">"list[1].password"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+  &lt;s:property value=<span class="hljs-string">"list[1].address"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+     
+  &lt;br&gt;&lt;br&gt;&lt;br&gt;
+     
+  &lt;s:property value=<span class="hljs-string">"list[2].username"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+  &lt;s:property value=<span class="hljs-string">"list[2].password"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+  &lt;s:property value=<span class="hljs-string">"list[2].address"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+     </code></pre></div>
+<ul>
+<li>遍历输出</li>
+</ul>
+<div><pre class="hljs"><code>  &lt;s:iterator value=<span class="hljs-string">"list"</span>&gt;
+          
+   &lt;s:property value=<span class="hljs-string">"username"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+   &lt;s:property value=<span class="hljs-string">"password"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+   &lt;s:property value=<span class="hljs-string">"address"</span>&gt;&lt;/s:property&gt;&lt;br&gt;
+              &lt;br&gt;&lt;br&gt;&lt;br&gt;
+   &lt;/s:iterator&gt;</code></pre></div>
+</li>
+<li></li>
+</ul>
+</div>
+      </article>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>❼Hibernate 环境搭建 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">❼Hibernate 环境搭建</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1637329369000"
+                  >2021-11-19 21:42</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922490090"
+                  >2022-01-23 15:21</time
+                ></span
+              >
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><p>Hibernate项目可以单独操作 因此可以直接创建一个JavaWeb项目之后进行创建操作</p>
+<p>@test 单元测试模块</p>
+<p><a>相关笔记外链</a></p>
+<h2 id="一-第一步-导入jar包">一、第一步 导入jar包</h2>
+<ul>
+<li><strong>jar包范围</strong>
+<ul>
+<li>基础的 required</li>
+<li>基础的 hibernate-entitymanager</li>
+<li>其他的日志jar包（本身没有日志记录功能
+<ul>
+<li>log4j</li>
+</ul>
+</li>
+<li>mysql驱动jar包</li>
+</ul>
+</li>
+</ul>
+<h2 id="二-创建一个实体类">二、创建一个实体类</h2>
+<ul>
+<li>创建User
+<ul>
+<li>必须有一个实体类属性唯一的类似主键的性质</li>
+<li>任意定义需要的名字</li>
+<li>生成get or set 方法</li>
+</ul>
+</li>
+<li>创建数据库
+<ul>
+<li>创建hibernate数据库（不用自己创建表，hibernate本身可以自己创建数据库</li>
+</ul>
+</li>
+</ul>
+<h2 id="三-配置文件数据库">三、配置文件数据库</h2>
+<ul>
+<li>配置实体类和数据库表一一对应关系（映射关系）
+<ul>
+<li>创建xml文件（映射文件，没有固定要求 那个位置都可以，但尽量遵循建议要求）
+<ul>
+<li>文件名（实体类）为*.hbm.xml</li>
+</ul>
+</li>
+<li>配置xml文件，在配置文件中引入约束dtd约束或者schema
+<ul>
+<li>约束hibernate文件位置
+<ul>
+<li>mapping文件</li>
+<li>可以直接复制头文件（打开方式尽量为规范记事本）</li>
+</ul>
+</li>
+<li>基本配置
+<ul>
+<li>hibernate-mapping    根标签
+<ul>
+<li>class标签
+<ul>
+<li>name = “全路径”</li>
+<li>table = “表名”（可以任意写会自己创建）</li>
+<li>配置ID
+<ul>
+<li>hibernate实体类id和表id对应
+<ul>
+<li>要求实体类有一个属性唯一值</li>
+<li>要求表有字段作为唯一值</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>id标签
+<ul>
+<li>name属性：实体类里面的id属性</li>
+<li>column：生成的表的字段类</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="四-创建hibernate的核心配置文件">四、创建hibernate的核心配置文件</h2>
+<ul>
+<li>核心配置文件
+<ul>
+<li>名称和格式为固定格式</li>
+<li>*.cfg.xml文件
+<ul>
+<li>引入dtd约束，可以直接复制dtd中的约束文件</li>
+<li>hibernate在操作过程中只会加载核心配置文件，不会加载其他文件</li>
+</ul>
+</li>
+<li>配置数据库
+<ul>
+<li>hibernate-configure
+<ul>
+<li>session-factory
+<ul>
+<li>配置数据库信息
+<ul>
+<li>properties 引入（文件位置hibernate.properties文件）
+<ul>
+<li>找出本身的sql数据库文件</li>
+<li>driver_class ： 加载驱动</li>
+<li>url ：加载数据库位置</li>
+<li>username ：用户名</li>
+<li>password ：密码</li>
+</ul>
+</li>
+<li>可以在数据库的properties文件中搜索mysql等数据库的类型
+<ul>
+<li>show_sql ：输出数据库语句</li>
+<li>format_sql ：格式化输出语句</li>
+<li>hbm2ddl.auto update：数据定义语言 可以在properties文件总搜索，创建表，需要配置之后update，如果已经存在表则更新，如果没有则创建</li>
+<li>dialect ：数据库方言，每个数据库都存在一些差异，需要方言进行翻译操作，值为dialect.MySQLDialect 只有分页操作需要，不添加也可以。</li>
+</ul>
+</li>
+<li>引入映射文件 map标签
+<ul>
+<li>resource ：文件路径"/…/…/."</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="五-功能测试">五、功能测试</h2>
+<ul>
+<li>
+<p>实现逻辑</p>
+<pre><code>   加载hibernate核心配置文件
+   创建SessionFactory对象
+   使用SessionFactory创建session对象
+   开启事务
+   写具体逻辑crud操作
+   提交事务
+   关闭资源
+</code></pre>
+</li>
+<li>
+<p>创建demo</p>
+<ul>
+<li>
+<p>第一步 加载hibernate核心配置文件</p>
+<ul>
+<li>在src下面找到hibernate.cfg.xml文件</li>
+<li>在hibernate里面封装对象</li>
+</ul>
+<div><pre class="hljs"><code>    <span class="hljs-type">Configuration</span> <span class="hljs-variable">cfg</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Configuration</span>();
+    cfg.configure();
+</code></pre></div>
+</li>
+<li>
+<p>第二步 创建SessionFactory对象</p>
+<ul>
+<li>读取hibernate核心配置文件内容创建SessionFactory</li>
+<li>在过程中，根据映射关系配置数据库</li>
+</ul>
+<div><pre class="hljs"><code>    <span class="hljs-type">SessionFactory</span> <span class="hljs-variable">sessionFactory</span> <span class="hljs-operator">=</span> cfg.buildSessionFactory;
+</code></pre></div>
+</li>
+<li>
+<p>第三步 使用SessionFactory创建session对象</p>
+<div><pre class="hljs"><code>    <span class="hljs-type">Session</span> <span class="hljs-variable">session</span> <span class="hljs-operator">=</span> sessionFactory.openSession();
+</code></pre></div>
+</li>
+<li>
+<p>第四步 开启事务</p>
+<div><pre class="hljs"><code>    <span class="hljs-type">transaction</span> <span class="hljs-variable">tx</span> <span class="hljs-operator">=</span>session.beginTransaction();<span class="hljs-comment">//导入 org.hibernate</span></code></pre></div>
+</li>
+<li>
+<p>第五步  写具体crud操作</p>
+<ul>
+<li>添加工程</li>
+<li>调用session方法实现添加</li>
+</ul>
+<div><pre class="hljs"><code>    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+    user.setUsername(<span class="hljs-string">"123"</span>)
+    session.asve(user)
+</code></pre></div>
+</li>
+<li>
+<p>第六步 提交事务</p>
+</li>
+</ul>
+</li>
+</ul>
+<div><pre class="hljs"><code>    tx.commit();</code></pre></div>
+<pre><code>- 第七步关闭资源
+</code></pre>
+<div><pre class="hljs"><code>        session.close()
+        sessionFactory.close()
+</code></pre></div>
+<div><pre class="hljs"><code>    <span class="hljs-type">Configuration</span> <span class="hljs-variable">cfg</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Configuration</span>();
+    cfg.configure();
+    <span class="hljs-type">SessionFactory</span> <span class="hljs-variable">sessionFactory</span> <span class="hljs-operator">=</span> cfg.buildSessionFactory;
+    <span class="hljs-type">Session</span> <span class="hljs-variable">session</span> <span class="hljs-operator">=</span> sessionFactory.openSession();
+    <span class="hljs-type">transaction</span> <span class="hljs-variable">tx</span> <span class="hljs-operator">=</span>session.beginTransaction();<span class="hljs-comment">//导入 org.hibernate</span>
+    
+    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+    user.setUsername(<span class="hljs-string">"123"</span>)
+    session.asve(user)
+    tx.commit();
+    session.close()
+    sessionFactory.close()
+    
+    
+
+</code></pre></div>
+<p>id: ec75fc72f4264385a6dc89b7825d059e
+parent_id: 8129978b61994b0e99236ec4bd281184
+created_time: 2021-10-28T06:26:12.103Z
+updated_time: 2021-11-17T13:51:18.201Z
+is_conflict: 0
+latitude: 34.62516774
+longitude: 113.68481029
+altitude: 201.7433
+author:
+source_url:
+is_todo: 0
+todo_due: 0
+todo_completed: 0
+source: joplin
+source_application: net.cozic.joplin-mobile
+application_data:
+order: 1635402372099
+user_created_time: 2021-10-28T06:26:12.103Z
+user_updated_time: 2021-11-17T13:51:18.201Z
+encryption_cipher_text:
+encryption_applied: 0
+markup_language: 1
+is_shared: 0
+share_id:
+conflict_original_id:
+type_: 1</p>
+</div>
+      </article>
+    </div>
+  </body>
+</html>

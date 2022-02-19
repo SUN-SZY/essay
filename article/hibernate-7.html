@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>㈠❶Hibernate 多表关系 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">㈠❶Hibernate 多表关系</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1636528058000"
+                  >2021-11-10 15:07</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922744749"
+                  >2022-01-23 15:25</time
+                ></span
+              >
+            </div>
+            
+            <div>
+              Keywords: 
+              <span class="keyword">&gt;&gt; untagged &lt;&lt;</span>
+              
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><p><a>相关笔记外链</a></p>
+<h2 id="一-一对多">一、一对多</h2>
+<ul>
+<li>分类和商品关系，一个分类里面有多个商品，一个商品只能属于一个分类</li>
+<li>客户和联系人是一对多关系
+<ul>
+<li>客户：与公司有业务往来</li>
+<li>联系人：公司里免得员工</li>
+</ul>
+</li>
+<li>公司和联系人的关系</li>
+</ul>
+<h2 id="二-多对多">二、多对多</h2>
+<ul>
+<li>订单和商品关系，一个订单里面有多个商品，一个商品属于多个订单。</li>
+<li>用户和角色多对多关系
+<ul>
+<li>用户：人物</li>
+<li>角色：职位</li>
+</ul>
+</li>
+<li>一个人物可以有多个职位</li>
+<li>一个用户里面可以有多个角色，一个角色里面可以有多个用户</li>
+<li>多对多建表：创建第三张表维护关系</li>
+</ul>
+<h2 id="三-一对一">三、一对一</h2>
+<ul>
+<li>专一</li>
+</ul>
+<h2 id="四-建表">四、建表</h2>
+<ul>
+<li>一对多关系建表
+<ul>
+<li>在多的哪一方创建字段作为外键指向那一方的主键</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th colspan="3">公司客户cname</th>
+<th colspan="3">cid</th>
+<th>lid</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>传智播客</td>
+<td>–》</td>
+<td>–》</td>
+<td>1</td>
+<td>《–</td>
+<td>《—</td>
+<td>100</td>
+<td>小王</td>
+</tr>
+<tr>
+<td>腾讯</td>
+<td>–》</td>
+<td>–》</td>
+<td>5</td>
+<td>《–</td>
+<td>《—</td>
+<td>101</td>
+<td>小里</td>
+</tr>
+<tr>
+<td>阿里</td>
+<td>–》</td>
+<td>–》</td>
+<td>9</td>
+<td>《–</td>
+<td>《—</td>
+<td>102</td>
+<td>小白</td>
+</tr>
+<tr>
+<td>百度</td>
+<td>–》</td>
+<td>–》</td>
+<td>11</td>
+<td>《–</td>
+<td>《—</td>
+<td>103</td>
+<td>小黑</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>多对多关系建表
+<ul>
+<li>至少有两个字段作为外键指向两个表主键</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>用户</th>
+<th></th>
+<th></th>
+<th>外键表</th>
+<th></th>
+<th></th>
+<th>角色</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>username</td>
+<td colspan="2">uid</td>
+<td>uid</td>
+<td colspan="2">rid</td>
+<td>rid</td>
+<td>rname</td>
+</tr>
+<tr>
+<td>传智播客</td>
+<td>1</td>
+<td>–》</td>
+<td>1</td>
+<td>5</td>
+<td>《—</td>
+<td>5</td>
+<td>小王</td>
+</tr>
+<tr>
+<td>百度</td>
+<td>1</td>
+<td>–》</td>
+<td>1</td>
+<td>6</td>
+<td>《—</td>
+<td>6</td>
+<td>小黑</td>
+</tr>
+<tr>
+<td>阿里</td>
+<td>3</td>
+<td>–》</td>
+<td>3</td>
+<td>7</td>
+<td>《—</td>
+<td>7</td>
+<td>小白</td>
+</tr>
+<tr>
+<td>腾讯</td>
+<td>4</td>
+<td>–》</td>
+<td>4</td>
+<td>7</td>
+<td>《—</td>
+<td>7</td>
+<td>小吕</td>
+</tr>
+</tbody>
+</table>
+<h2 id="五-一对多映射关系一对多级联操作">五、一对多映射关系（一对多级联操作）</h2>
+<ul>
+<li>映射配置
+<ul>
+<li>创建实体类（customer and  LinkMan）
+<ul>
+<li>分配属性生成方法<div><pre class="hljs"><code>custanme表属性
+cid
+custName
+custLevel
+custSource
+custPhone
+custMobile
+
+LinkMan表属性
+lkm_id
+lkm_name
+lkm_gender
+lkm_phone</code></pre></div>
+</li>
+</ul>
+</li>
+<li>两个实体类之间互相表示
+<ul>
+<li>在联系人实体类里面表示所属客户
+<ul>
+<li>一个联系人只能属于一个客户</li>
+</ul>
+</li>
+<li>在客户实体类里面表示多个联系人
+<ul>
+<li>一个客户有多个联系人（一对多关系）</li>
+<li>hibernate要求使用集合表示多的数据，使用set集合
+<code>private Set&lt;linkMan&gt; setLinkMan = new HsahSet&lt;LinkMan&gt;()</code></li>
+<li>配置hbm.xml文件映射关系
+<ul>
+<li>一个实体类对应一个映射文件</li>
+<li>配置基本关系</li>
+<li>在映射文件中配置一对多关系
+<ul>
+<li>hbm映射文件配置</li>
+</ul>
+<div><pre class="hljs"><code>Customer.hbm.xml 文件配置
+ 使用set标签表示所有联系人，set标签表示所有联系人，
+ set标签里有name属性，值为客户实体类表示的联系人的set集合名称那个
+ 
+ &lt;set name=<span class="hljs-string">"seLinkMan"</span>&gt;
+ 
+ 一对多建表，you外键，hibernate机制为双向维护外键，
+ 在多的那一方都配置外键，column属性值为外键的名称
+ 
+ &lt;key = colum = <span class="hljs-string">"clid"</span>&gt;&lt;/key&gt;
+ 
+ 客户所有的联系人，class里面写联系人实体类全路径
+ 
+ &lt;one-to-many class=<span class="hljs-string">"cn.itcast......LinkMan"</span>/&gt;
+ 
+ &lt;/set&gt;
+ 
+ LinkMan.hbm.xml文件配置
+ 
+ &lt;one-to-many name=<span class="hljs-string">"custname"</span>   class=<span class="hljs-string">"cn.itcast......Customer"</span> clumn=<span class="hljs-string">"cid"</span> &gt;&lt;/many-to-one&gt;
+ </code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      </article>
+    </div>
+  </body>
+</html>

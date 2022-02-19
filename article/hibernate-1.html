@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>㈠❸HIbernate 多对多关系 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">㈠❸HIbernate 多对多关系</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1637228035000"
+                  >2021-11-18 17:33</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922613494"
+                  >2022-01-23 15:23</time
+                ></span
+              >
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><h2 id="一-映射配置">一、映射配置</h2>
+<ul>
+<li>以角色和用户为例
+<ul>
+<li>创建实体类 用户和角色</li>
+<li>让两个实体类之间互相表示
+<ul>
+<li>表示一个用户可以有多个角色（实体类）<div><pre class="hljs"><code><span class="hljs-keyword">private</span> Set&lt;Role&gt; setRole = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;Role&gt;();</code></pre></div>
+</li>
+<li>表示一个角色有多个用户<div><pre class="hljs"><code><span class="hljs-keyword">private</span> Set&lt;User&gt; setUser = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;User&gt;();</code></pre></div>
+</li>
+</ul>
+</li>
+<li>基本映射关系
+<ul>
+<li>配置角色和用户的类和表对应</li>
+<li>配置多对多关系
+<ul>
+<li>在用户里面表示所有的角色，使用set标签</li>
+</ul>
+<div><pre class="hljs"><code>在用户里面表示所有角色，使用set标签
+ name属性：角色set集合名称
+ table属性：第三张表的名称
+ key标签里面配置当前映射文件在第三章表外键名称
+ class角色实体类全路径
+ columm角色在第三章表的外键名称
+ 标签为&lt;many-to-many class=<span class="hljs-string">""</span> column=<span class="hljs-string">""</span>&gt;&lt;/many-to-many&gt;
+</code></pre></div>
+</li>
+</ul>
+</li>
+<li>配置完毕后在核心映射文件中引入</li>
+</ul>
+</li>
+</ul>
+<h2 id="二-多对多级联保存">二、多对多级联保存</h2>
+<ul>
+<li>添加两个用户，为每个用户添加连个角色
+<ul>
+<li>创建角色</li>
+<li>实例化对象赋值</li>
+</ul>
+<div><pre class="hljs"><code><span class="hljs-type">Role</span> <span class="hljs-variable">r1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Role</span>();
+r1.setRole_name(<span class="hljs-comment">///);</span>
+r1.setRole_Password(<span class="hljs-comment">///);</span>
+ </code></pre></div>
+<ul>
+<li>建立关系，把角色放到用户里面</li>
+</ul>
+<div><pre class="hljs"><code>user---r1/r2
+User1.getSetRole().add(r1);
+User1.getSetRole().add(r2);
+</code></pre></div>
+<ul>
+<li>保存用户</li>
+</ul>
+</li>
+</ul>
+<h2 id="三-多对多级联删除">三、多对多级联删除</h2>
+<ul>
+<li>在set标签进行配置 casecade值增添delete</li>
+<li>删除用户
+<ul>
+<li><code>casecade = “save-update,delete”</code><div><pre class="hljs"><code> <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> session.get(User.class,<span class="hljs-number">1</span>);
+ Session.delete(user);</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="四-维护第三张表关系">四、维护第三张表关系</h2>
+<ul>
+<li>用户和角色多对多关系，维护关系通过第三张表维护</li>
+<li>让某个用户有某个角色
+<ul>
+<li>根据id查询用户和角色</li>
+</ul>
+<div><pre class="hljs"><code> 让某个用户有某个角色
+ <span class="hljs-type">User</span> <span class="hljs-variable">kucy</span> <span class="hljs-operator">=</span> session.get(User.class,<span class="hljs-number">1</span>);
+ <span class="hljs-type">Role</span> <span class="hljs-variable">role</span> <span class="hljs-operator">=</span> session.get(Role.class,<span class="hljs-number">1</span>);
+</code></pre></div>
+<ul>
+<li>把角色放到用户里面</li>
+</ul>
+<div><pre class="hljs"><code>kucky.getSetRole().add(role);</code></pre></div>
+</li>
+<li>让某个用户没有某个角色
+<ul>
+<li>删除角色</li>
+</ul>
+<div><pre class="hljs"><code>user.getSetRole().remove(role);</code></pre></div>
+</li>
+</ul>
+</div>
+      </article>
+    </div>
+  </body>
+</html>

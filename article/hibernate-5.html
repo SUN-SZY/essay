@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link rel="stylesheet" href="/_assets/main.css" />
+
+    <title>❿Hibernate 缓存 - SUN</title>
+  <link rel="stylesheet" href="/_markdown_plugin_assets/highlight.js/atom-one-light.css" /><style>.mermaid { background-color: white; width: 640px; }</style></head>
+  <body>
+    <div class="main">
+      <nav class="navigation">
+        <a href="/">SUN</a>
+      </nav>
+      <article>
+        <header>
+          <h1 class="article-title">❿Hibernate 缓存</h1>
+          <div class="article-info">
+            <div>
+              <span
+                >Created At：<time datetime="1636452942000"
+                  >2021-11-09 18:15</time
+                ></span
+              >
+              <span
+                >Updated At：<time datetime="1642922760944"
+                  >2022-01-23 15:26</time
+                ></span
+              >
+            </div>
+            
+            <div>
+              Keywords: 
+              <span class="keyword">&gt;&gt; untagged &lt;&lt;</span>
+              
+            </div>
+            
+          </div>
+        </header>
+        <div class="article-content markdown-body"><p><a>相关笔记外链</a></p>
+<h2 id="一-一级缓存">一、 一级缓存</h2>
+<ul>
+<li>数据库存到数据库中，数据库本身是文件系统，使用流方式操作文件效率不是很高
+<ul>
+<li>把数据存到内存里面不需要使用流方式，可以直接读取内存中的数据</li>
+<li>是hibernate的一个优化方式</li>
+</ul>
+</li>
+<li>特点
+<ul>
+<li>hibernate一级缓存默认打开</li>
+<li>使用范围是session范围，从session创建到session关闭范围</li>
+<li>hibernate的一级缓存中，存储数据必须持久态数据</li>
+</ul>
+</li>
+<li>特性
+<ul>
+<li>持久态自动更新数据库</li>
+</ul>
+</li>
+</ul>
+
+				<div>
+					
+					<pre class="mermaid">graph LR
+
+    A[User user = session.get User.class,7 ]
+    --&gt;|把返回user持久态对象放到一级缓存中|B[一级缓存 ]
+    A--&gt;|吧user对象放到一级缓存对应的快照区里面|C[快照区 副本]
+    D[user.setUsername hanmeimei] --&gt;B
+    
+
+
+</pre>
+				</div>
+			<ul>
+<li>
+<p>底层实现 <img src="/_resources/a5399d3ca4f0415fb87a85116f16542d.png" /></p>
+<ul>
+<li>修改user对象里面的值</li>
+<li>修改持久态对象的值</li>
+<li>同时修改一级缓存中的内容</li>
+<li>修改一级缓存的内容但是不会修改对应的一级缓存的快照区的内容</li>
+<li>最后提交事务，提交事务后：比较一级缓存内容和对应的快照区内容是否相同，如果不同，把一级缓存内容更新到数据库里面，如果相同不会更新数据库</li>
+</ul>
+</li>
+<li>
+<p>验证方式</p>
+<ul>
+<li>使用数据库查询方式，两次查询，第一次会进行访问数据库，第二次查询会直接从快照区中获取数据</li>
+<li><img src="/_resources/5abb0cbc30544f42a5fab67f7ad689c6.png" /></li>
+</ul>
+</li>
+<li>
+<p>二级缓存</p>
+<ul>
+<li>目前已经不使用，替代技术redis</li>
+<li>二级缓存需要配置，默认关闭</li>
+<li>使用范围是SessionFactory</li>
+</ul>
+</li>
+</ul>
+<h2 id="二-事务">二、事务</h2>
+<ul>
+<li>事务
+<ul>
+<li>事务是一系列操作组成的工作单元，该工作单元内的操作是不可分割的，即要么所有操作都做，要么所有操作都不做，这就是事务。</li>
+</ul>
+</li>
+<li>事物特性</li>
+</ul>
+<table>
+<tbody>
+<tr>
+<td>|原子性</td>
+<td>原子性是指事务是一个不可分割的工作单位，事务中的操作要么全部成功，要么全部失败。比如在同一个事务中的SQL语句，要么全部执行成功，要么全部执行失败。</td>
+</tr>
+<tr>
+<td>|隔离性</td>
+<td>事务的隔离性是多个用户并发访问数据库时，数据库为每一个用户开启的事务，不能被其他事务的操作数据所干扰，多个并发事务之间要相互隔离。</td>
+</tr>
+<tr>
+<td>|持久性</td>
+<td>持久性是指一个事务一旦被提交，它对数据库中数据的改变就是永久性的，接下来即使数据库发生故障也不应该对其有任何影响。</td>
+</tr>
+<tr>
+<td>|一致性</td>
+<td>事务必须使数据库从一个一致性状态变换到另外一个一致性状态。换一种方式理解就是：事务按照预期生效，数据的状态是预期的状态。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>不考虑隔离特性产生的问题
+<ul>
+<li>脏读</li>
+<li>不可重复读</li>
+<li>虚读</li>
+</ul>
+</li>
+<li>设置事务隔离级别
+<ul>
+<li>mysql默认隔离级别repeatable read</li>
+</ul>
+</li>
+<li>事务规范
+<ul>
+<li>代码结构</li>
+</ul>
+</li>
+</ul>
+<div><pre class="hljs"><code>        <span class="hljs-keyword">try</span>{
+             <span class="hljs-comment">//开启事务</span>
+             <span class="hljs-comment">//提交事务</span>
+        } <span class="hljs-keyword">catch</span>(Exception e){
+            <span class="hljs-comment">//回滚事务</span>
+        }
+        }<span class="hljs-keyword">finally</span>{
+            <span class="hljs-comment">//关闭事务</span>
+        }</code></pre></div>
+<ul>
+<li>绑定session（解决独立性问题）
+<ul>
+<li>session类似于jdbc的connection，web中的ThreadLocal</li>
+<li>帮实现与本地线程绑定session</li>
+<li>获取与本地线程session
+<ul>
+<li>在hibernate核心配置文件中配置</li>
+</ul>
+<div><pre class="hljs"><code>&lt;property name=<span class="hljs-string">"hibernate.current_session_context_cLass"</span>&gt;thread&lt;property&gt;</code></pre></div>
+<ul>
+<li>调用SessionFactory里面的方法得到</li>
+</ul>
+<div><pre class="hljs"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Session getSessionobject（）{
+<span class="hljs-keyword">return</span> sessionFactory.getCurrentSession（）;
+         }</code></pre></div>
+<ul>
+<li>获取本地线程绑定的session时候关闭session会报错，不需要再关闭</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="三-查询操作api查询">三、查询操作（API查询）</h2>
+<ul>
+<li>api的使用
+<ul>
+<li>Query对象
+<ul>
+<li>不需要写sql语句，但是要写hql语句
+<ul>
+<li>hql是HIbernate Query Language，hibernate提供查询语言</li>
+<li>hql与sql语言区别
+<ul>
+<li>使用sql操作表和字段</li>
+<li>使用hql操作实体类和属性</li>
+</ul>
+</li>
+<li>查询所有hql语句
+<ul>
+<li>from实体类名称</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>对象的使用
+<ul>
+<li>创建Query对象
+<ul>
+<li><code>session.createQuery("form user")</code>;</li>
+</ul>
+</li>
+<li>调用Query对象里面的方法得到结果
+<ul>
+<li><code>List&lt;User&gt; list=quey.list();</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Criteria对象
+<ul>
+<li><code>session = sessionFactory.openSession();</code></li>
+<li>创建Criteria对象
+<ul>
+<li>方法里面参数是实体类class</li>
+<li><code>session.createCriteria(User.class);</code></li>
+</ul>
+</li>
+<li>调用方法得到结果
+<ul>
+<li><code>List&lt;User&gt; list = criteria.list();</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SQLQuery对象
+<ul>
+<li>使用hibernate时候，调用底层SQL实现</li>
+<li>实现过程
+<ul>
+<li>创建爱你SQLQuery对象
+<ul>
+<li>参数普通的sql语句
+<ul>
+<li><code>SQLQuery sqlQuery = session.createSQLQuery("select * form t_user");</code></li>
+</ul>
+</li>
+<li>调用SQLQuery里面的方法
+<ul>
+<li><code>List list = sqlQuery.list();</code></li>
+</ul>
+</li>
+<li>返回list集合，默认里面每部分数组结构</li>
+<li>可以声明返回对象的形式</li>
+</ul>
+<div><pre class="hljs"><code> <span class="hljs-type">SQLQuery</span> <span class="hljs-variable">sqlQuery</span> <span class="hljs-operator">=</span> session.createsQLQuery(<span class="hljs-string">"select * from t_user"</span>)
+ sqlQuery .addEntity(User.class)
+ List&lt;user&gt; list = sqlQuery. 1ist</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      </article>
+    </div>
+  <script src="/_markdown_plugin_assets/mermaid/mermaid.min.js"></script>
+<script src="/_markdown_plugin_assets/mermaid/mermaid_render.js"></script></body>
+</html>
